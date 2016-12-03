@@ -70,6 +70,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     private boolean volUpPressed = false;
     private boolean volDwnPressed = false;
+    private boolean btn_r2_pressed = false;
 
     DatagramPacket packet = null;
     DatagramSocket datagramSocket = null;
@@ -175,6 +176,18 @@ public class MainActivity extends Activity implements SensorEventListener {
                     volDwnPressed = false;
                 }
                 return true;
+            case KeyEvent.KEYCODE_BUTTON_R2:
+            {
+                if (action == KeyEvent.ACTION_DOWN)
+                {
+                    btn_r2_pressed = true;
+                }
+                else if (action == KeyEvent.ACTION_UP)
+                {
+                    btn_r2_pressed = false;
+                }
+                return true;
+            }
         }
 
         return super.dispatchKeyEvent(event);
@@ -238,6 +251,11 @@ public class MainActivity extends Activity implements SensorEventListener {
         if (volDwnPressed)
         {
             buttonState += 8;
+        }
+
+        if (btn_r2_pressed)
+        {
+            buttonState += 16;
         }
 
         return timestamp_TAG + ";" + packet_timestamp + ";" +
