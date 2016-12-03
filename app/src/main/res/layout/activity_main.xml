@@ -9,7 +9,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.bearbunny.controllerdemo.MainActivity"
-    android:background="#333333">
+    android:background="#333333"
+    android:weightSum="1">
 
     <TextView
         android:layout_width="match_parent"
@@ -129,7 +130,9 @@
                 android:text="TCP"
                 android:id="@+id/tcpRadioButton"
                 android:textColor="#ffffff"
-                android:layout_gravity="center_vertical|right" />
+                android:layout_gravity="center_vertical|right"
+                android:clickable="false"
+                android:focusable="false" />
 
         </RadioGroup>
 
@@ -147,56 +150,12 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Orientation:"
-            android:id="@+id/textView2"
-            android:layout_gravity="left"
-            android:textColor="#ffffff" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0;0;0"
-            android:id="@+id/orientationValue"
-            android:layout_gravity="right"
-            android:textColor="#ffffff" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Orientation old:"
-            android:id="@+id/textView3"
-            android:layout_gravity="left"
-            android:textColor="#ffffff" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0;0;0"
-            android:id="@+id/orientationOldValue"
-            android:layout_gravity="right"
-            android:textColor="#ffffff" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fused:"
+            android:text="Fused orientation: "
             android:id="@+id/textView4"
             android:layout_gravity="left"
             android:textColor="#ffffff" />
@@ -213,12 +172,13 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_weight="1.">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Button0"
+            android:text="Button\n0"
             android:id="@+id/button0"
             android:layout_gravity="center"
             android:textStyle="bold"
@@ -226,14 +186,42 @@
             android:layout_weight="1" />
 
         <Button
-            android:text="Button1"
+            android:text="Button\n1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/button1"
             android:layout_gravity="center"
             android:textStyle="bold"
             android:textSize="30dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:elevation="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.16">
+
+        <ToggleButton
+            android:text="VolUpToggleBtn"
+            android:textOn="VOL UP Pressed"
+            android:textOff="VOL UP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/volUpTgBtn"
+            android:clickable="false"
+            android:layout_weight="0.5" />
+
+        <ToggleButton
+            android:text="VolDwnToggleBtn"
+            android:textOn="VOL DOWN Pressed"
+            android:textOff="VOL DOWN"
+            android:clickable="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/volDwnTgBtn"
+            android:layout_weight="0.5" />
     </LinearLayout>
 
 </LinearLayout>

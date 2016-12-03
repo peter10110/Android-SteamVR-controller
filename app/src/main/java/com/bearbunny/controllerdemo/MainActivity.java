@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,11 +48,11 @@ public class MainActivity extends Activity implements SensorEventListener {
     private RadioGroup connectionModeToggleGroup;
     private ToggleButton sendDataModeToggle;
     private TextView ownIPField;
-    private TextView orientationField;
-    private TextView orientationOldField;
     private TextView fusedSensorField;
     private Button btn_button0;
     private Button btn_button1;
+    private ToggleButton volumeUp_btn;
+    private ToggleButton volumeDwn_btn;
 
     private enum ConnectionModes {
         UDP, TCP
@@ -66,20 +67,13 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Boolean sendEnabled = false;
     private SensorManager sensorManager;
     private Sensor linAccelerationSensor;
-    private Sensor accelerationSensor;
-    private Sensor magneticSensor;
-    private Sensor orientation_old;
+
+    private boolean volUpPressed = false;
+    private boolean volDwnPressed = false;
 
     DatagramPacket packet = null;
     DatagramSocket datagramSocket = null;
 
-    private float[] linearAcc;
-    private float[] rotationAngles;
-    private float[] R_matrix;
-    private float[] I_matrix;
-    private float[] gravity;
-    private float[] geomagnetic;
-    private float[] rotationAngles_old;
     private float[] fusedEulerAngles;
 
     /**
@@ -124,28 +118,17 @@ public class MainActivity extends Activity implements SensorEventListener {
             }
         });
 
-        orientationField = (TextView) findViewById(R.id.orientationValue);
-        orientationOldField = (TextView) findViewById(R.id.orientationOldValue);
         fusedSensorField = (TextView) findViewById(R.id.fusedValue);
 
         btn_button0 = (Button) findViewById(R.id.button0);
         btn_button1 = (Button) findViewById(R.id.button1);
+        volumeUp_btn = (ToggleButton) findViewById(R.id.volUpTgBtn);
+        volumeDwn_btn = (ToggleButton) findViewById(R.id.volDwnTgBtn);
 
-        linearAcc = new float[] { 0f, 0f, 0f };
-        rotationAngles = new float[] { 0f, 0f, 0f };
-        R_matrix = new float[9];
-        I_matrix = new float[9];
-        geomagnetic = new float[3];
-        gravity = new float[3];
         fusedEulerAngles = new float[3];
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
         linAccelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        accelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        orientation_old = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-
         currentOrientationProvider = new ImprovedOrientationSensor1Provider(sensorManager);
     }
 
@@ -159,11 +142,42 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, orientation_old, sensorSpeed);
         sensorManager.registerListener(this, linAccelerationSensor, sensorSpeed);
-        sensorManager.registerListener(this, magneticSensor, sensorSpeed);
-        sensorManager.registerListener(this, accelerationSensor, sensorSpeed);
         currentOrientationProvider.start();
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        switch (event.getKeyCode())
+        {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_DOWN)
+                {
+                    volumeUp_btn.setChecked(true);
+                    volUpPressed = true;
+                }
+                else if (action == KeyEvent.ACTION_UP)
+                {
+                    volumeUp_btn.setChecked(false);
+                    volUpPressed = false;
+                }
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if (action == KeyEvent.ACTION_DOWN)
+                {
+                    volumeDwn_btn.setChecked(true);
+                    volDwnPressed = true;
+                }
+                else if (action == KeyEvent.ACTION_UP)
+                {
+                    volumeDwn_btn.setChecked(false);
+                    volDwnPressed = false;
+                }
+                return true;
+        }
+
+        return super.dispatchKeyEvent(event);
     }
 
     private void SendButtonPressed(boolean enabled)
@@ -195,8 +209,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 
     private final String timestamp_TAG = "TMST";
-    private final String orientation_TAG = "OR";
-    private final String linearAcc_TAG = "LA";
     private final String fusedOrientation_TAG = "FO";
     private final String buttons_TAG = "BTN";
     private final String close_TAG = "END";
@@ -218,9 +230,17 @@ public class MainActivity extends Activity implements SensorEventListener {
             buttonState += 2;
         }
 
+        if (volUpPressed)
+        {
+            buttonState += 4;
+        }
+
+        if (volDwnPressed)
+        {
+            buttonState += 8;
+        }
+
         return timestamp_TAG + ";" + packet_timestamp + ";" +
-                //orientation_TAG + ";" + rotationAngles_old[1] + ";" + rotationAngles_old[0] + ";" + -rotationAngles_old[2] + ";" +
-                //linearAcc_TAG + ";" + linearAcc[1] +";" + linearAcc[0] +";" + -linearAcc[2] +";" +
                 fusedOrientation_TAG + ";" + fusedEulerAngles[1] +";" + fusedEulerAngles[0] +";" + -fusedEulerAngles[2] +";" +
                 buttons_TAG + ";" + buttonState + ";" + close_TAG;
     }
@@ -277,7 +297,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         try {
             ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
         } catch (UnknownHostException ex) {
-            Log.e("WIFIIP", "Unable to get host address.");
+            Log.e("WIFI IP", "Unable to get host address.");
             ipAddressString = null;
         }
 
@@ -307,33 +327,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         RefreshFusedOrientationData();
-        switch (event.sensor.getType())
-        {
-//            case Sensor.TYPE_LINEAR_ACCELERATION:
-//                linearAcc = event.values;
-//                fusedSensorField.setText(Float3ToString(linearAcc));
-//                break;
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                geomagnetic = event.values;
-                if (CalculateOrientation())
-                {
-                    orientationField.setText(Float3ToString(rotationAngles));
-                }
-                break;
-            case Sensor.TYPE_ACCELEROMETER:
-                gravity = event.values;
-                if (CalculateOrientation())
-                {
-                    orientationField.setText(Float3ToString(rotationAngles));
-                }
-                break;
-            case Sensor.TYPE_ORIENTATION:
-                rotationAngles_old = event.values;
-                rotationAngles_old[0] -= 360f;
-                rotationAngles_old[2] *= -1f;
-                orientationOldField.setText(Float3ToString(rotationAngles_old));
-                break;
-        }
     }
 
     private void RefreshFusedOrientationData()
@@ -343,26 +336,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         fusedEulerAngles[1] *= 57.2957795f;
         fusedEulerAngles[2] *= 57.2957795f;
         fusedSensorField.setText(Float3ToString(fusedEulerAngles));
-    }
-
-    private final float PI = (float) Math.PI;
-    private Boolean CalculateOrientation()
-    {
-        R_matrix = new float[9];
-        I_matrix = new float[9];
-        if (SensorManager.getRotationMatrix(R_matrix, I_matrix, gravity, geomagnetic))
-        {
-            SensorManager.getOrientation(R_matrix, rotationAngles);
-
-            rotationAngles[0] = rotationAngles[0] * 180f / PI;
-            rotationAngles[1] = rotationAngles[1] * 180f / PI;
-            rotationAngles[2] = rotationAngles[2] * 180f / PI;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     private final String format = "%6.2f";
