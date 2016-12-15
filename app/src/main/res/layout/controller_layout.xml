@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:gravity="center_horizontal"
+        android:background="#444444">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="10dp" />
+        <LinearLayout
+            android:layout_height="250dp"
+            android:background="@drawable/circle"
+            android:layout_width="250dp">
+        </LinearLayout>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="10dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/menu_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/circle"
+                android:text="Menu"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/system_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/circle"
+                android:text="System"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/grip_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/circle"
+                android:text="Grip"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="60dp" />
+        <TextView
+            android:id="@+id/trackpad_press"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trackpad"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_margin="5dp"/>
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="70dp" />
+        <TextView
+            android:id="@+id/trigger_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trigger"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
+</RelativeLayout>
