@@ -33,7 +33,7 @@ public class ControllerDataProvider {
     private float trackpadX = 0f;
     private float trackpadY = 0f;
 
-    public void SetButtonState(Buttons button, boolean state) {
+    public void setButtonState(Buttons button, boolean state) {
         switch (button) {
             case TrackpadPress:
                 trackpadPressed = state;
@@ -53,7 +53,7 @@ public class ControllerDataProvider {
         }
     }
 
-    public boolean GetButtonState(Buttons button) {
+    public boolean getButtonState(Buttons button) {
         switch (button) {
             case Trigger:
                 return triggerPressed;
@@ -97,7 +97,7 @@ public class ControllerDataProvider {
         currentOrientationProvider.stop();
     }
 
-    public OrientationProvider GetOrientationProvider()
+    public OrientationProvider getOrientationProvider()
     {
         return currentOrientationProvider;
     }

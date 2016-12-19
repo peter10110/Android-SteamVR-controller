@@ -1,9 +1,7 @@
 package org.hitlabnz.sensor_fusion_demo;
 
-import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -12,15 +10,7 @@ import android.view.ViewGroup;
 import com.bearbunny.controllerdemo.ControllerDataProvider;
 import com.bearbunny.controllerdemo.R;
 
-import org.hitlabnz.sensor_fusion_demo.orientationProvider.AccelerometerCompassProvider;
-import org.hitlabnz.sensor_fusion_demo.orientationProvider.CalibratedGyroscopeProvider;
-import org.hitlabnz.sensor_fusion_demo.orientationProvider.GravityCompassProvider;
-import org.hitlabnz.sensor_fusion_demo.orientationProvider.ImprovedOrientationSensor1Provider;
-import org.hitlabnz.sensor_fusion_demo.orientationProvider.ImprovedOrientationSensor2Provider;
 import org.hitlabnz.sensor_fusion_demo.orientationProvider.OrientationProvider;
-import org.hitlabnz.sensor_fusion_demo.orientationProvider.RotationVectorProvider;
-
-import static android.content.Context.SENSOR_SERVICE;
 
 /**
  * A fragment that contains the same visualisation for different orientation providers
@@ -68,7 +58,7 @@ public class OrientationVisualisationFragment extends android.app.Fragment {
     }
 
     public void SetDataProvider(ControllerDataProvider dataProvider) {
-        this.currentOrientationProvider = dataProvider.GetOrientationProvider();
+        this.currentOrientationProvider = dataProvider.getOrientationProvider();
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -57,14 +58,13 @@ public class WifiModeFragment extends Fragment {
         UDP, TCP
     }
 
-    private String targetIP = "000.000.000.000";
+    private String targetIP = "192.168.0.12";
     private int targetPort = 5555;
-    private long sendInterval = 8l;
+    private long sendInterval = 16l;
     private WifiModeFragment.ConnectionModes connectionMode = WifiModeFragment.ConnectionModes.UDP;
 
     private Timer timer;
     private Handler handler;
-    private Runnable runnable;
     private Boolean sendEnabled = false;
 
     private ControllerDataProvider dataProvider;
@@ -78,27 +78,77 @@ public class WifiModeFragment extends Fragment {
 
         // Restore preferences
         SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
-        targetIP = settings.getString(TARGET_IP_KEY, "000.000.000.000");
-        targetPort = settings.getInt(TARGET_PORT_KEY, 5555);
+        targetIP = settings.getString(TARGET_IP_KEY, targetIP);
+        targetPort = settings.getInt(TARGET_PORT_KEY, targetPort);
         sendInterval = settings.getLong(SEND_INTERVAL_KEY, 8l);
         connectionMode = WifiModeFragment.ConnectionModes.values()[settings.getInt(CONNECTION_MODE_KEY, 0)];
 
         ownIPField = (TextView) view.findViewById(R.id.ipTextView);
         ownIPField.setText("IP: " + GetWifiIP());
+        ownIPField.clearFocus();
 
         ipField = (EditText) view.findViewById(R.id.targetIPField);
         ipField.setText(targetIP);
+        ipField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    sendIntervalField.clearFocus();
+                    sendIntervalField.setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                }
+                return false;
+            }
+        });
 
         portField = (EditText) view.findViewById(R.id.targetPortField);
         portField.setText(String.valueOf(targetPort));
+        ipField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    sendIntervalField.clearFocus();
+                    sendIntervalField.setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                }
+                return false;
+            }
+        });
 
         sendIntervalField = (EditText) view.findViewById(R.id.intervalField);
         sendIntervalField.setText(String.valueOf(sendInterval));
+        sendIntervalField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    sendIntervalField.clearFocus();
+                    sendIntervalField.setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                }
+                return false;
+            }
+        });
 
         connectionModeToggleGroup = (RadioGroup) view.findViewById(R.id.modeRadio);
         connectionModeToggleGroup.check(connectionModeToggleGroup.getChildAt(connectionMode.ordinal()).getId());
 
         sendDataModeToggle = (ToggleButton) view.findViewById(R.id.sendDataToggle);
+        sendDataModeToggle.setChecked(backgroundProcessManager.getWifiSendingState());
         sendDataModeToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,10 +169,10 @@ public class WifiModeFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
                 if (action == MotionEvent.ACTION_UP) {
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.System, false);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.System, false);
                 }
                 else if (action == MotionEvent.ACTION_DOWN) {
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.System, true);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.System, true);
                 }
                 return false;
             }
@@ -133,10 +183,10 @@ public class WifiModeFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
                 if (action == MotionEvent.ACTION_UP) {
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.Menu, false);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.Menu, false);
                 }
                 else if (action == MotionEvent.ACTION_DOWN) {
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.Menu, true);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.Menu, true);
                 }
                 return false;
             }
@@ -147,10 +197,10 @@ public class WifiModeFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
                 if (action == MotionEvent.ACTION_UP) {
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.Grip, false);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.Grip, false);
                 }
                 else if (action == MotionEvent.ACTION_DOWN) {
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.Grip, true);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.Grip, true);
                 }
                 return false;
             }
@@ -201,24 +251,24 @@ public class WifiModeFragment extends Fragment {
                 if (action == KeyEvent.ACTION_DOWN)
                 {
                     volumeUp_btn.setChecked(true);
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.TrackpadPress, true);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.TrackpadPress, true);
                 }
                 else if (action == KeyEvent.ACTION_UP)
                 {
                     volumeUp_btn.setChecked(false);
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.TrackpadPress, false);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.TrackpadPress, false);
                 }
                 return true;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 if (action == KeyEvent.ACTION_DOWN)
                 {
                     volumeDwn_btn.setChecked(true);
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.Trigger, true);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.Trigger, true);
                 }
                 else if (action == KeyEvent.ACTION_UP)
                 {
                     volumeDwn_btn.setChecked(false);
-                    dataProvider.SetButtonState(ControllerDataProvider.Buttons.Trigger, false);
+                    dataProvider.setButtonState(ControllerDataProvider.Buttons.Trigger, false);
                 }
                 return true;
         }
@@ -244,6 +294,7 @@ public class WifiModeFragment extends Fragment {
 
     private void SendButtonPressed(boolean enabled)
     {
+        RefreshFieldData();
         ipField.setEnabled(!enabled);
         portField.setEnabled(!enabled);
         sendIntervalField.setEnabled(!enabled);

@@ -1,18 +1,11 @@
 package com.bearbunny.controllerdemo;
 
 import android.app.Activity;
-import android.net.wifi.WifiManager;
-import android.util.Log;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.ByteOrder;
-
-import static android.content.Context.WIFI_SERVICE;
 
 /**
  * Created by Peter on 2016.12.19..
@@ -80,23 +73,23 @@ public class SendDataThroughWifi {
         packet_timestamp = System.nanoTime();
         buttonState = 0;
 
-        if (dataProvider.GetButtonState(ControllerDataProvider.Buttons.TrackpadPress.Trigger)) {
+        if (dataProvider.getButtonState(ControllerDataProvider.Buttons.TrackpadPress.Trigger)) {
             buttonState += 16;
         }
 
-        if (dataProvider.GetButtonState(ControllerDataProvider.Buttons.TrackpadPress.TrackpadPress)) {
+        if (dataProvider.getButtonState(ControllerDataProvider.Buttons.TrackpadPress.TrackpadPress)) {
             buttonState += 8;
         }
 
-        if (dataProvider.GetButtonState(ControllerDataProvider.Buttons.TrackpadPress.Menu)) {
+        if (dataProvider.getButtonState(ControllerDataProvider.Buttons.TrackpadPress.Menu)) {
             buttonState += 4;
         }
 
-        if (dataProvider.GetButtonState(ControllerDataProvider.Buttons.TrackpadPress.System)) {
+        if (dataProvider.getButtonState(ControllerDataProvider.Buttons.TrackpadPress.System)) {
             buttonState += 2;
         }
 
-        if (dataProvider.GetButtonState(ControllerDataProvider.Buttons.TrackpadPress.Grip)) {
+        if (dataProvider.getButtonState(ControllerDataProvider.Buttons.TrackpadPress.Grip)) {
             buttonState += 1;
         }
 

@@ -1,6 +1,7 @@
 package com.bearbunny.controllerdemo;
 
 import android.app.Activity;
+import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,29 +15,40 @@ public class BackgroundProcessManager {
     private ControllerDataProvider dataProvider;
     private SendDataThroughWifi wifiModeProvider;
     private Activity activity;
+    private boolean sendingOnWifi = false;
 
     public BackgroundProcessManager(Activity activity, ControllerDataProvider dataProvider) {
         this.activity = activity;
         this.dataProvider = dataProvider;
     }
 
+    public boolean getWifiSendingState() {
+        return sendingOnWifi;
+    }
+
     public void StartDataSendOnWifi(long interval, String targetIP)
     {
-        if (sendDataOverWifiTimer == null) {
-            wifiModeProvider = new SendDataThroughWifi(activity, dataProvider);
-            wifiModeProvider.InitSendThroughWifi(targetIP);
-        }
-
-        sendDataOverWifiTimer = new Timer();
-        sendDataOverWifiTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                wifiModeProvider.SendData();
+        if (!sendingOnWifi) {
+            Log.d("Bg process manager", "Star send on WiFi");
+            sendingOnWifi = true;
+            if (sendDataOverWifiTimer == null) {
+                wifiModeProvider = new SendDataThroughWifi(activity, dataProvider);
+                wifiModeProvider.InitSendThroughWifi(targetIP);
             }
-        }, 0l, interval);
+
+            sendDataOverWifiTimer = new Timer();
+            sendDataOverWifiTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    wifiModeProvider.SendData();
+                }
+            }, 0l, interval);
+        }
     }
 
     public void StopDataSendOnWifi() {
+        Log.d("Bg process manager", "Stop send on WiFi");
+        sendingOnWifi = false;
         if (sendDataOverWifiTimer != null) {
             sendDataOverWifiTimer.cancel();
         }
@@ -48,8 +60,6 @@ public class BackgroundProcessManager {
     }
 
     public void OnStop() {
-        if (sendDataOverWifiTimer != null) {
-            sendDataOverWifiTimer.cancel();
-        }
+        StopDataSendOnWifi();
     }
 }
