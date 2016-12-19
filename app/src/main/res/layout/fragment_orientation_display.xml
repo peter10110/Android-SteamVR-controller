@@ -17,10 +17,10 @@
             android:textAlignment="center"
             android:textStyle="normal|bold" />
 
-        <SurfaceView
+        <android.opengl.GLSurfaceView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/surfaceView" />
+            android:id="@+id/orientetionSurfaceView" />
     </LinearLayout>
 
 </FrameLayout>

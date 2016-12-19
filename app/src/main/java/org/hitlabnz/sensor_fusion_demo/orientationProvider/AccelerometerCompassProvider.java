@@ -33,8 +33,8 @@ public class AccelerometerCompassProvider extends OrientationProvider {
      * 
      * @param sensorManager The android sensor manager
      */
-    public AccelerometerCompassProvider(SensorManager sensorManager) {
-        super(sensorManager);
+    public AccelerometerCompassProvider(SensorManager sensorManager, int sensorRefreshSpeed) {
+        super(sensorManager, sensorRefreshSpeed);
 
         //Add the compass and the accelerometer
         sensorList.add(sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));

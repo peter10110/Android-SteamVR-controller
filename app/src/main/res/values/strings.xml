@@ -3,6 +3,7 @@
     <string-array name="drawer_items">
         <item>WiFi mode</item>
         <item>Controller</item>
+        <item>Visualisation</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

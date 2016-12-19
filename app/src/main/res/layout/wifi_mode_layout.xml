@@ -178,9 +178,9 @@
         android:layout_weight="1.">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Button\n0"
+            android:text="System"
             android:id="@+id/button0"
             android:layout_gravity="center"
             android:textStyle="bold"
@@ -188,10 +188,21 @@
             android:layout_weight="1" />
 
         <Button
-            android:text="Button\n1"
-            android:layout_width="wrap_content"
+            android:text="Menu"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/button1"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:layout_weight="1"
+            android:elevation="0dp" />
+
+        <Button
+            android:text="Grip"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/button2"
             android:layout_gravity="center"
             android:textStyle="bold"
             android:textSize="30dp"
@@ -207,8 +218,8 @@
 
         <ToggleButton
             android:text="VolUpToggleBtn"
-            android:textOn="VOL UP Pressed"
-            android:textOff="VOL UP"
+            android:textOn="Trackpad Pressed"
+            android:textOff="Trackpad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/volUpTgBtn"
@@ -217,8 +228,8 @@
 
         <ToggleButton
             android:text="VolDwnToggleBtn"
-            android:textOn="VOL DOWN Pressed"
-            android:textOff="VOL DOWN"
+            android:textOn="Trigger pressed"
+            android:textOff="Trigger"
             android:clickable="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

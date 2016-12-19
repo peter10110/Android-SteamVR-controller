@@ -51,13 +51,19 @@ public abstract class OrientationProvider implements SensorEventListener {
     protected SensorManager sensorManager;
 
     /**
+     * The refresh speed of the android sensors
+     */
+    protected int sensorRefreshSpeed;
+
+    /**
      * Initialises a new OrientationProvider
      * 
      * @param sensorManager
      *            The android sensor manager
      */
-    public OrientationProvider(SensorManager sensorManager) {
+    public OrientationProvider(SensorManager sensorManager, int sensorRefreshSpeed) {
         this.sensorManager = sensorManager;
+        this.sensorRefreshSpeed = sensorRefreshSpeed;
 
         // Initialise with identity
         currentOrientationRotationMatrix = new MatrixF4x4();
@@ -76,7 +82,7 @@ public abstract class OrientationProvider implements SensorEventListener {
             // enable our sensors when the activity is resumed, ask for
             // 20 ms updates (Sensor_delay_game)
             sensorManager.registerListener(this, sensor,
-                    SensorManager.SENSOR_DELAY_GAME);
+                    sensorRefreshSpeed);
         }
     }
 

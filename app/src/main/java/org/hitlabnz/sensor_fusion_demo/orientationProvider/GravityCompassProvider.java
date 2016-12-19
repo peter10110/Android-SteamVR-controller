@@ -33,8 +33,8 @@ public class GravityCompassProvider extends OrientationProvider {
      * 
      * @param sensorManager The android sensor manager
      */
-    public GravityCompassProvider(SensorManager sensorManager) {
-        super(sensorManager);
+    public GravityCompassProvider(SensorManager sensorManager, int sensorRefreshSpeed) {
+        super(sensorManager, sensorRefreshSpeed);
 
         //Add the compass and the gravity sensor
         sensorList.add(sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY));

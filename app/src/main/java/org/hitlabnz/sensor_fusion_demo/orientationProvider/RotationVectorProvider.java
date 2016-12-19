@@ -23,8 +23,8 @@ public class RotationVectorProvider extends OrientationProvider {
      * 
      * @param sensorManager The android sensor manager
      */
-    public RotationVectorProvider(SensorManager sensorManager) {
-        super(sensorManager);
+    public RotationVectorProvider(SensorManager sensorManager, int sensorRefreshSpeed) {
+        super(sensorManager, sensorRefreshSpeed);
 
         //The rotation vector sensor that is being used for this provider to get device orientation
         sensorList.add(sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR));

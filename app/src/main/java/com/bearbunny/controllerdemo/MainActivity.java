@@ -3,32 +3,16 @@ package com.bearbunny.controllerdemo;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.SharedPreferences;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.net.Uri;
-import android.net.wifi.WifiManager;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.ByteOrder;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
+import org.hitlabnz.sensor_fusion_demo.OrientationVisualisationFragment;
 
 public class MainActivity extends Activity {
     // Navigation drawer
@@ -36,13 +20,24 @@ public class MainActivity extends Activity {
     private ListView mDrawerList;
     private String[] mDrawerItems;
 
+    // Fragment controls
     private static int currentFragmentIndex = 0;
     private Fragment currentFragment = null;
+
+    // Sensor and controller data
+    private ControllerDataProvider dataProvider;
+    private BackgroundProcessManager backgroundProcessManager;
+
+    // Settings
+    private final int sensorSpeed = SensorManager.SENSOR_DELAY_FASTEST;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        findViewById(R.id.nav_drawer_layout).setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE);
+
 
         // Navigation drawer
         mDrawerItems = getResources().getStringArray(R.array.drawer_items);
@@ -53,15 +48,19 @@ public class MainActivity extends Activity {
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
+        Init();
+
+        // Load the first segment
         FragmentManager fragmentManager = getFragmentManager();
         currentFragment = new ControllerFragment();
         currentFragmentIndex = 1;
         fragmentManager.beginTransaction().replace(R.id.content_frame, currentFragment).commit();
     }
 
-    private void InitSensors()
+    private void Init()
     {
-
+        dataProvider = new ControllerDataProvider(this, sensorSpeed);
+        backgroundProcessManager = new BackgroundProcessManager(this, dataProvider);
     }
 
     private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener {
@@ -74,9 +73,14 @@ public class MainActivity extends Activity {
             switch (position) {
                 case 0:
                     currentFragment = new WifiModeFragment();
+                    ((WifiModeFragment) currentFragment).SetDataProvider(dataProvider, backgroundProcessManager);
                     break;
                 case 1:
                     currentFragment = new ControllerFragment();
+                    break;
+                case 2:
+                    currentFragment = new OrientationVisualisationFragment();
+                    ((OrientationVisualisationFragment) currentFragment).SetDataProvider(dataProvider);
                     break;
             }
 
@@ -94,8 +98,32 @@ public class MainActivity extends Activity {
         if (currentFragmentIndex == 0)
         {
             // The WiFi mode is selected currently
-            ((WifiModeFragment) currentFragment).dispatchKeyEvent(event);
+            return ((WifiModeFragment) currentFragment).dispatchKeyEvent(event);
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (dataProvider != null) {
+            dataProvider.OnPause();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (backgroundProcessManager != null) {
+            backgroundProcessManager.OnStop();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (dataProvider != null) {
+            dataProvider.OnResume();
+        }
     }
 }

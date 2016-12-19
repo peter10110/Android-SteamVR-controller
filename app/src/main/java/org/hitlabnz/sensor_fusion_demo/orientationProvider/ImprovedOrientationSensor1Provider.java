@@ -138,8 +138,8 @@ public class ImprovedOrientationSensor1Provider extends OrientationProvider {
      * 
      * @param sensorManager The android sensor manager
      */
-    public ImprovedOrientationSensor1Provider(SensorManager sensorManager) {
-        super(sensorManager);
+    public ImprovedOrientationSensor1Provider(SensorManager sensorManager, int sensorRefreshSpeed) {
+        super(sensorManager, sensorRefreshSpeed);
 
         //Add the gyroscope and rotation Vector
         sensorList.add(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));

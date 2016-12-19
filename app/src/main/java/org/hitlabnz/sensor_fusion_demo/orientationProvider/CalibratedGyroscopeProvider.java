@@ -64,8 +64,8 @@ public class CalibratedGyroscopeProvider extends OrientationProvider {
      * 
      * @param sensorManager The android sensor manager
      */
-    public CalibratedGyroscopeProvider(SensorManager sensorManager) {
-        super(sensorManager);
+    public CalibratedGyroscopeProvider(SensorManager sensorManager, int sensorRefreshSpeed) {
+        super(sensorManager, sensorRefreshSpeed);
 
         //Add the gyroscope
         sensorList.add(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
