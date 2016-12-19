@@ -2,14 +2,9 @@ package com.bearbunny.controllerdemo;
 
 import android.app.Fragment;
 import android.content.SharedPreferences;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.DrawerLayout;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,27 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
-import org.hitlabnz.sensor_fusion_demo.orientationProvider.ImprovedOrientationSensor1Provider;
-import org.hitlabnz.sensor_fusion_demo.orientationProvider.OrientationProvider;
-
-import java.io.IOException;
 import java.math.BigInteger;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static android.content.Context.SENSOR_SERVICE;
 import static android.content.Context.WIFI_SERVICE;
 
 /**
@@ -78,12 +63,13 @@ public class WifiModeFragment extends Fragment {
     private WifiModeFragment.ConnectionModes connectionMode = WifiModeFragment.ConnectionModes.UDP;
 
     private Timer timer;
+    private Handler handler;
+    private Runnable runnable;
     private Boolean sendEnabled = false;
 
     private ControllerDataProvider dataProvider;
     private BackgroundProcessManager backgroundProcessManager;
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.wifi_mode_layout, container, false);
@@ -240,11 +226,18 @@ public class WifiModeFragment extends Fragment {
     }
 
     public void StartDataRefreshThread() {
+        handler = new Handler();
+
         timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                RefreshFusedDataField();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        RefreshFusedDataField();
+                    }
+                });
             }
         }, 0l, sendInterval);
     }

@@ -108,7 +108,6 @@ public class ControllerDataProvider {
         fusedEulerAngles[0] *= 57.2957795f;
         fusedEulerAngles[1] *= 57.2957795f;
         fusedEulerAngles[2] *= 57.2957795f;
-        Log.d("Fused sensor data: {0}", Float3ToString(fusedEulerAngles));
     }
 
     /**

@@ -42,7 +42,7 @@ public class BackgroundProcessManager {
         }
     }
 
-    public void ResetDataSenOnWifi() {
+    public void ResetDataSenDOnWifi() {
         StopDataSendOnWifi();
         sendDataOverWifiTimer = null;
     }
