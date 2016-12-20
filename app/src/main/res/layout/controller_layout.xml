@@ -17,9 +17,25 @@
             android:layout_height="10dp"
             tools:ignore="Suspicious0dp" />
         <LinearLayout
+            android:id="@+id/trackpad"
             android:layout_height="250dp"
             android:background="@drawable/circle"
-            android:layout_width="250dp">
+            android:layout_width="250dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:focusable="true"
+            android:clickable="true"
+            android:focusableInTouchMode="true">
+
+
+            <SurfaceView
+                android:id="@+id/trackpad_surfaceView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:clickable="false"
+                android:focusableInTouchMode="false"
+                android:layout_weight="1" />
         </LinearLayout>
         <Space
             android:layout_width="0dp"

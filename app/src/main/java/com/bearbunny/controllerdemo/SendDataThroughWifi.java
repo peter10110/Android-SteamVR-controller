@@ -18,6 +18,7 @@ public class SendDataThroughWifi {
     private final String timestamp_TAG = "TMST";
     private final String fusedOrientation_TAG = "FO";
     private final String buttons_TAG = "BTN";
+    private final String trackpad_TAG = "TRK";
     private final String close_TAG = "END";
     private long packet_timestamp;
     private String packet_message;
@@ -94,8 +95,12 @@ public class SendDataThroughWifi {
         }
 
         float[] fusedData = dataProvider.getFusedEulerAngles();
-        return timestamp_TAG + ";" + packet_timestamp + ";" +
-                fusedOrientation_TAG + ";" + fusedData[1] + ";" + fusedData[0] + ";" +
-                -fusedData[2] +";" + buttons_TAG + ";" + buttonState + ";" + close_TAG;
+        return timestamp_TAG + ";" + packet_timestamp + ";"
+                + fusedOrientation_TAG + ";"
+                + fusedData[1] + ";" + fusedData[0] + ";" + -fusedData[2] +";"
+                + buttons_TAG + ";" + buttonState + ";"
+                + trackpad_TAG + ";"
+                + (dataProvider.getTracpadTouched() ? 1 : 0) + ";" + dataProvider.getTrackpadX() + ";" + dataProvider.getTrackpadY() + ";"
+                + close_TAG;
     }
 }

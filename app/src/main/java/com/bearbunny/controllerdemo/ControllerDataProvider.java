@@ -70,6 +70,18 @@ public class ControllerDataProvider {
         }
     }
 
+    public float getTrackpadX() {
+        return trackpadX;
+    }
+
+    public float getTrackpadY() {
+        return trackpadY;
+    }
+
+    public boolean getTracpadTouched() {
+        return trackpadTouched;
+    }
+
     public void SetTrackpadPosition(boolean touched, float x, float y) {
         trackpadTouched = touched;
         trackpadX = x;

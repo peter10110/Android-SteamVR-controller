@@ -1,16 +1,23 @@
 package com.bearbunny.controllerdemo;
 
 import android.app.Fragment;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Peter on 2016.12.15..
@@ -26,6 +33,15 @@ public class ControllerFragment extends Fragment {
     private TextView gripButton;
     private TextView trackpadPress;
     private TextView triggerPress;
+    private LinearLayout trackpad;
+
+    private SurfaceView trackpadTouchPoint;
+    private SurfaceHolder holder;
+    private Paint paint;
+    private float currentTouchpointX = 0f;
+    private float currentTouchpointY = 0f;
+    private float density;
+    private static final float trackpadDiameter = 250f;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,7 +105,95 @@ public class ControllerFragment extends Fragment {
         triggerPress = (TextView) view.findViewById(R.id.trigger_button);
         trackpadPress = (TextView) view.findViewById(R.id.trackpad_press);
 
+        InitTouchPoint();
+        trackpad = (LinearLayout) view.findViewById(R.id.trackpad);
+        trackpad.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    OnTrackpadTouchEvent(true);
+                    currentTouchpointX = event.getX();
+                    currentTouchpointY = event.getY();
+                    dataProvider.SetTrackpadPosition(true, ClampTrackpadAxis(currentTouchpointX),
+                            ClampTrackpadAxis(currentTouchpointY));
+                }
+                else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_OUTSIDE) {
+                    OnTrackpadTouchEvent(false);
+                    currentTouchpointX = 0f;
+                    currentTouchpointY = 0f;
+                    dataProvider.SetTrackpadPosition(false, 0f, 0f);
+                }
+                else if (action == MotionEvent.ACTION_MOVE) {
+                    currentTouchpointX = event.getX();
+                    currentTouchpointY = event.getY();
+
+                    if (CheckTouchpadBounds(currentTouchpointX, currentTouchpointY)) {
+                        DrawTouchpoint(currentTouchpointX, currentTouchpointY);
+                        dataProvider.SetTrackpadPosition(true, ClampTrackpadAxis(currentTouchpointX),
+                                ClampTrackpadAxis(currentTouchpointY));
+                    }
+                }
+                return true;
+            }
+        });
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        density = displayMetrics.density;
+
         return view;
+    }
+
+    private float ClampTrackpadAxis(float value) {
+        float clamped = ((value / density) - 125f) / 125f;
+        if (clamped > 1f)
+            return 1f;
+        else
+            return clamped;
+    }
+
+    private void InitTouchPoint() {
+        trackpadTouchPoint = (SurfaceView) view.findViewById(R.id.trackpad_surfaceView);
+        trackpadTouchPoint.setZOrderOnTop(true);
+        holder = trackpadTouchPoint.getHolder();
+        holder.setFormat(PixelFormat.TRANSPARENT);
+        paint = new Paint();
+        paint.setColor(getResources().getColor(R.color.touchpoint));
+    }
+
+    private boolean CheckTouchpadBounds(float pointX, float pointY) {
+        final float center = trackpadDiameter / 2f;
+        float x = center - pointX / density;
+        float y = center - pointY / density;
+        float distance = (float) Math.sqrt(x*x + y*y);
+        return distance < center;
+    }
+
+    private void OnTrackpadTouchEvent(boolean touched) {
+        if (touched == false) {
+            ClearTouchpoint();
+        }
+    }
+
+    private void DrawTouchpoint(float x, float y) {
+        Canvas canvas = holder.lockCanvas();
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        canvas.drawCircle(x, y, 15f * density, paint);
+        holder.unlockCanvasAndPost(canvas);
+    }
+
+    private void DrawTrackpadBounds(Canvas canvas) {
+        Paint boundsPaint = new Paint();
+        boundsPaint.setColor(Color.RED);
+        Log.d("Canvas debug", "Width: " + canvas.getWidth() + ", height: " + canvas.getHeight());
+        canvas.drawCircle(canvas.getWidth() / 2f, canvas.getHeight() / 2f, (trackpadDiameter / 2f) * density, boundsPaint);
+    }
+
+    private void ClearTouchpoint() {
+        Canvas canvas = holder.lockCanvas();
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        holder.unlockCanvasAndPost(canvas);
     }
 
     private void OnButtonTouchEvent(TextView button, boolean touchDown) {

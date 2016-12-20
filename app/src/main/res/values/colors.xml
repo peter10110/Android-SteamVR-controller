@@ -7,4 +7,5 @@
     <color name="background_highlighted">#688387</color>
     <color name="text_color">#ffffff</color>
     <color name="text_color_highlighted">#4096ff</color>
+    <color name="touchpoint">#c4e4e4e4</color>
 </resources>
