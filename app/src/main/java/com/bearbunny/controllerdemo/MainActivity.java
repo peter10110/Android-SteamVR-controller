@@ -55,6 +55,7 @@ public class MainActivity extends Activity {
         currentFragment = new ControllerFragment();
         currentFragmentIndex = 1;
         fragmentManager.beginTransaction().replace(R.id.content_frame, currentFragment).commit();
+        ((ControllerFragment) currentFragment).SetDataProvider(dataProvider, backgroundProcessManager);
     }
 
     private void Init()
@@ -77,6 +78,8 @@ public class MainActivity extends Activity {
                     break;
                 case 1:
                     currentFragment = new ControllerFragment();
+                    ((ControllerFragment) currentFragment).SetDataProvider(dataProvider, backgroundProcessManager);
+
                     break;
                 case 2:
                     currentFragment = new OrientationVisualisationFragment();
@@ -95,10 +98,13 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (currentFragmentIndex == 0)
-        {
+        if (currentFragmentIndex == 0) {
             // The WiFi mode is selected currently
             return ((WifiModeFragment) currentFragment).dispatchKeyEvent(event);
+        }
+        else if (currentFragmentIndex == 1) {
+            // The controller mode is selected currently
+            return ((ControllerFragment) currentFragment).dispatchKeyEvent(event);
         }
         return super.dispatchKeyEvent(event);
     }

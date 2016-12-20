@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,11 +10,12 @@
         android:layout_height="match_parent"
         android:weightSum="1"
         android:gravity="center_horizontal"
-        android:background="#444444">
+        android:background="@color/background_grey">
 
         <Space
             android:layout_width="0dp"
-            android:layout_height="10dp" />
+            android:layout_height="10dp"
+            tools:ignore="Suspicious0dp" />
         <LinearLayout
             android:layout_height="250dp"
             android:background="@drawable/circle"
@@ -39,7 +41,10 @@
                 android:text="Menu"
                 android:gravity="center"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:focusable="true"
+                android:clickable="true"
+                android:focusableInTouchMode="true"/>
             <Space
                 android:layout_width="0dp"
                 android:layout_height="1dp"
