@@ -6,6 +6,8 @@ import android.util.Log;
 
 import org.hitlabnz.sensor_fusion_demo.orientationProvider.ImprovedOrientationSensor1Provider;
 import org.hitlabnz.sensor_fusion_demo.orientationProvider.OrientationProvider;
+import org.hitlabnz.sensor_fusion_demo.representation.Quaternion;
+import org.hitlabnz.sensor_fusion_demo.representation.Vector3f;
 
 import java.util.Locale;
 
@@ -20,6 +22,9 @@ public class ControllerDataProvider {
     private OrientationProvider currentOrientationProvider;
     private SensorManager sensorManager;
     private float[] fusedEulerAngles;
+    private Quaternion fusedQuaternion;
+    private Quaternion zeroQuaternion;
+    private Quaternion finalFusedQuaternion;
 
     // Buttons
     public enum Buttons {
@@ -32,6 +37,34 @@ public class ControllerDataProvider {
     private boolean trackpadTouched = false;
     private float trackpadX = 0f;
     private float trackpadY = 0f;
+
+    // Debug options
+    private boolean lockOrientation = false;
+    private boolean dummyOrientation = false;
+    private Quaternion hmdCorrectionQuat = new Quaternion();
+    public void setOrientationLock(Boolean setTo) {
+        lockOrientation = setTo;
+    }
+
+    public void setDummyOrientation(Boolean setTo) {
+        dummyOrientation = setTo;
+    }
+
+    public void setHmdCorrection(float w, float x, float y, float z) {
+        hmdCorrectionQuat.setXYZW(x,y,z,w);
+    }
+
+    public Boolean getOrientationLock() {
+        return lockOrientation;
+    }
+
+    public Boolean getDummyOrientation() {
+        return dummyOrientation;
+    }
+
+    public Quaternion getHmdCorrection() {
+        return hmdCorrectionQuat;
+    }
 
     public void setButtonState(Buttons button, boolean state) {
         switch (button) {
@@ -93,8 +126,20 @@ public class ControllerDataProvider {
         return fusedEulerAngles;
     }
 
+    public Quaternion getFusedQuaternion() {
+        RefreshFusedOrientationQuaternionData();
+        Log.d("Final fused quaternion", finalFusedQuaternion.toStringSingleLine());
+        return finalFusedQuaternion;
+    }
+
     public ControllerDataProvider(Activity activity, int sensorRefreshSpeed) {
         fusedEulerAngles = new float[3];
+        fusedQuaternion = new Quaternion();
+        fusedQuaternion.loadIdentityQuat();
+        zeroQuaternion = new Quaternion();
+        zeroQuaternion.loadIdentityQuat();
+        finalFusedQuaternion = new Quaternion();
+        fusedQuaternion.loadIdentityQuat();
         sensorManager = (SensorManager) activity.getSystemService(SENSOR_SERVICE);
         currentOrientationProvider = new ImprovedOrientationSensor1Provider(sensorManager, sensorRefreshSpeed);
     }
@@ -116,10 +161,52 @@ public class ControllerDataProvider {
 
     private void RefreshFusedOrientationData()
     {
-        currentOrientationProvider.getEulerAngles(fusedEulerAngles);
-        fusedEulerAngles[0] *= 57.2957795f;
-        fusedEulerAngles[1] *= 57.2957795f;
-        fusedEulerAngles[2] *= 57.2957795f;
+        if (lockOrientation)
+            return;
+
+        if (dummyOrientation) {
+            fusedEulerAngles[0] = 0f;
+            fusedEulerAngles[1] = 0f;
+            fusedEulerAngles[2] = 90f;
+        }
+        else {
+            currentOrientationProvider.getEulerAngles(fusedEulerAngles);
+            fusedEulerAngles[0] *= 57.2957795f;
+            fusedEulerAngles[1] *= 57.2957795f;
+            fusedEulerAngles[2] *= 57.2957795f;
+        }
+    }
+
+    public void setCurrentOrientationAsCenter() {
+        /*zeroQuaternion.setW(fusedQuaternion.w());
+        zeroQuaternion.setX(fusedQuaternion.x());
+        zeroQuaternion.setY(fusedQuaternion.y());
+        zeroQuaternion.setZ(fusedQuaternion.z());*/
+        zeroQuaternion.set(fusedQuaternion);
+        Log.d("Center point set", zeroQuaternion.toStringSingleLine());
+        zeroQuaternion.invert();
+        zeroQuaternion.setW(-zeroQuaternion.getW());
+        Log.d("Center point inverted", zeroQuaternion.toStringSingleLine());
+    }
+
+    float angleCounter = 0f;
+    private void RefreshFusedOrientationQuaternionData() {
+        if (lockOrientation)
+            return;
+
+        if (dummyOrientation) {
+            //fusedQuaternion.setXYZW(0f, 0f, 0.707f, 0.707f);
+            fusedQuaternion.setAxisAngle(new Vector3f(1f, 0f, 0f), angleCounter += 5f);
+        }
+        else {
+            currentOrientationProvider.getQuaternion(fusedQuaternion);
+        }
+
+        fusedQuaternion.multiplyByQuat(zeroQuaternion, finalFusedQuaternion);
+        finalFusedQuaternion.normalize();
+        Quaternion angleCorrection = new Quaternion();
+        angleCorrection.setAxisAngle(new Vector3f(1f,0f,0f),-90f);
+        angleCorrection.multiplyByQuat(finalFusedQuaternion, finalFusedQuaternion);
     }
 
     /**
@@ -135,5 +222,17 @@ public class ControllerDataProvider {
         final String format = "%6.2f";
         return String.format(Locale.US, format, values[0]) + "; " +String.format(Locale.US, format, values[1]) + "; " +
                 String.format(Locale.US, format, values[2]);
+    }
+
+    public static String QuaternionToString(Quaternion value)
+    {
+        /**
+         * The format of the floats in the string.
+         */
+        final String format = "%6.6f";
+        return "W:" + (value.w() < 0 ? "" : "+") +  String.format(Locale.US, format, value.w()) +
+                ";\nX:" + (value.x() < 0 ? "" : "+") + String.format(Locale.US, format, value.x()) +
+                ";\nY:" + (value.y() < 0 ? "" : "+") +  String.format(Locale.US, format, value.y()) +
+                ";\nZ:" + (value.z() < 0 ? "" : "+") +  String.format(Locale.US, format, value.z());
     }
 }

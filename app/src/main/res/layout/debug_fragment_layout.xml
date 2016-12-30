@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_grey">
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:textOff="Lock orientation"
+        android:textOn="Orientation locked"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toggleLockOrientation" />
+    <ToggleButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textOff="Use real orientation"
+        android:textOn="Use dummy orientation"
+        android:id="@+id/toggleDummyOrientation"/>
+    
+    <LinearLayout
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:minHeight="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:layout_height="match_parent"
+            android:text="X"
+            android:textColor="@color/text_color"/>
+        <SeekBar
+            android:id="@+id/seekBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:max="360"
+            android:progress="0"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:id="@+id/slider1Value"
+            android:text="0.0"
+            android:textColor="@color/text_color"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:minHeight="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:layout_height="match_parent"
+            android:text="Y"
+            android:textColor="@color/text_color"/>
+        <SeekBar
+            android:id="@+id/seekBar2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:max="360"
+            android:progress="0"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:id="@+id/slider2Value"
+            android:text="0.0"
+            android:textColor="@color/text_color"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:minHeight="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:layout_height="match_parent"
+            android:text="Z"
+            android:textColor="@color/text_color"/>
+        <SeekBar
+            android:id="@+id/seekBar3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:max="360"
+            android:progress="0"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:id="@+id/slider3Value"
+            android:text="0.0"
+            android:textColor="@color/text_color"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="60dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/text_color"
+            android:text="Quaternion: "/>
+        <TextView
+            android:text="Quaternion"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/text_color"
+            android:id="@+id/hmd_quaternion_text" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="60dp"
+    android:orientation="horizontal">
+    <TextView
+        android:text="Quaternion normalized: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color" />
+
+    <TextView
+        android:text="Quaternion value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:id="@+id/hmd_quaternion_norm_text" />
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+        <TextView
+            android:text="Euler angles: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color" />
+
+        <TextView
+            android:text="Quaternion value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:id="@+id/hmd_euler_text" />
+    </LinearLayout>
+
+
+</LinearLayout>

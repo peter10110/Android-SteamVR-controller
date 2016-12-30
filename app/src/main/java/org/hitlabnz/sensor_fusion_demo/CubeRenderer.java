@@ -2,6 +2,8 @@ package org.hitlabnz.sensor_fusion_demo;
 
 import android.opengl.GLSurfaceView;
 
+import com.bearbunny.controllerdemo.ControllerDataProvider;
+
 import org.hitlabnz.sensor_fusion_demo.orientationProvider.OrientationProvider;
 import org.hitlabnz.sensor_fusion_demo.representation.Quaternion;
 
@@ -26,6 +28,7 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
      */
     private OrientationProvider orientationProvider = null;
     private Quaternion quaternion = new Quaternion();
+    private ControllerDataProvider dataProvider;
 
     /**
      * Initialises a new CubeRenderer
@@ -43,6 +46,10 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
      */
     public void setOrientationProvider(OrientationProvider orientationProvider) {
         this.orientationProvider = orientationProvider;
+    }
+
+    public void setDataProvider(ControllerDataProvider dataProvider) {
+        this.dataProvider = dataProvider;
     }
 
     /**
@@ -70,7 +77,8 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
                 //gl.glMultMatrixf(orientationProvider.getRotationMatrix().getMatrix(), 0);
 
                 // Get the rotation from the current orientationProvider as quaternion
-                orientationProvider.getQuaternion(quaternion);
+                //orientationProvider.getQuaternion(quaternion);
+                quaternion = dataProvider.getFusedQuaternion();
                 gl.glRotatef((float) (2.0f * Math.acos(quaternion.getW()) * 180.0f / Math.PI), quaternion.getX(), quaternion.getY(), quaternion.getZ());
             }
 

@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.View;
@@ -52,10 +53,10 @@ public class MainActivity extends Activity {
 
         // Load the first segment
         FragmentManager fragmentManager = getFragmentManager();
-        currentFragment = new ControllerFragment();
-        currentFragmentIndex = 1;
+        currentFragment = new WifiModeFragment();
+        currentFragmentIndex = 0;
         fragmentManager.beginTransaction().replace(R.id.content_frame, currentFragment).commit();
-        ((ControllerFragment) currentFragment).SetDataProvider(dataProvider, backgroundProcessManager);
+        ((WifiModeFragment) currentFragment).SetDataProvider(dataProvider, backgroundProcessManager);
     }
 
     private void Init()
@@ -85,6 +86,9 @@ public class MainActivity extends Activity {
                     currentFragment = new OrientationVisualisationFragment();
                     ((OrientationVisualisationFragment) currentFragment).SetDataProvider(dataProvider);
                     break;
+                case 3:
+                    currentFragment = new DebugFragment();
+                    ((DebugFragment) currentFragment).SetDataProvider(dataProvider);
             }
 
             FragmentManager fragmentManager = getFragmentManager();

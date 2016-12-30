@@ -1,5 +1,7 @@
 package org.hitlabnz.sensor_fusion_demo.representation;
 
+import android.util.Log;
+
 /**
  * The Quaternion class. A Quaternion is a four-dimensional vector that is used to represent rotations of a rigid body
  * in the 3D space. It is very similar to a rotation vector; it contains an angle, encoded into the w component
@@ -58,6 +60,13 @@ public class Quaternion extends Vector4f {
         points[0] = points[0] / mag;
         points[1] = points[1] / mag;
         points[2] = points[2] / mag;
+    }
+
+    public Quaternion getNormalized() {
+        Quaternion temp = new Quaternion();
+        temp.set(this);
+        temp.normalize();
+        return temp;
     }
 
     @Override
@@ -121,6 +130,28 @@ public class Quaternion extends Vector4f {
         tmpQuaternion.copyVec4(this);
         multiplyByQuat(input, tmpQuaternion);
         this.copyVec4(tmpQuaternion);
+    }
+
+    // return a new Quaternion whose value is (this * b)
+    public Quaternion multiply_v2(Quaternion b) {
+        Quaternion a = this;
+        float w = a.w()*b.w() - a.x()*b.x() - a.y()*b.y() - a.z()*b.z();
+        float x = a.w()*b.x() + a.x()*b.w() + a.y()*b.z() - a.z()*b.y();
+        float y = a.w()*b.y() - a.x()*b.z() + a.y()*b.w() + a.z()*b.x();
+        float z = a.w()*b.z() + a.x()*b.y() - a.y()*b.x() + a.z()*b.w();
+        Quaternion temp = new Quaternion();
+        temp.setXYZW(x, y, z, w);
+        return temp;
+    }
+
+    // return a new Quaternion whose value is the inverse of this
+    public void invert() {
+        float d = w()*w() + x()*x() + y()*y() + z()*z();
+        Log.d("Invert d", "d="+d);
+        setX(-x() / d);
+        setY(-y() / d);
+        setZ(-z() / d);
+        setW(-w() / d);
     }
 
     /**
@@ -256,6 +287,21 @@ public class Quaternion extends Vector4f {
         return ret;
     }
 
+    public double[] toEulerAnglesDeg() {
+        double[] ret = new double[3];
+
+        ret[0] = Math.atan2(2 * points[1] * getW() - 2 * points[0] * points[2], 1 - 2 * (points[1] * points[1]) - 2
+                * (points[2] * points[2])); // atan2(2*qy*qw-2*qx*qz , 1 - 2*qy2 - 2*qz2)
+        ret[1] = Math.asin(2 * points[0] * points[1] + 2 * points[2] * getW()); // asin(2*qx*qy + 2*qz*qw)
+        ret[2] = Math.atan2(2 * points[0] * getW() - 2 * points[1] * points[2], 1 - 2 * (points[0] * points[0]) - 2
+                * (points[2] * points[2])); // atan2(2*qx*qw-2*qy*qz , 1 - 2*qx2 - 2*qz2)
+
+        ret[0] *= 57.2957795f;
+        ret[1] *= 57.2957795f;
+        ret[2] *= 57.2957795f;
+        return ret;
+    }
+
     /**
      * Sets the quaternion to an identity quaternion of 0,0,0,1.
      */
@@ -269,7 +315,11 @@ public class Quaternion extends Vector4f {
 
     @Override
     public String toString() {
-        return "{X: " + getX() + ", Y:" + getY() + ", Z:" + getZ() + ", W:" + getW() + "}";
+        return "{W: " + getW() + ", \nX: " + getX() + ", \nY:" + getY() + ", \nZ:" + getZ() + "}";
+    }
+
+    public String toStringSingleLine() {
+        return "{W: " + getW() + ", X: " + getX() + ", Y:" + getY() + ", Z:" + getZ() + "}";
     }
 
     /**
@@ -387,12 +437,12 @@ public class Quaternion extends Vector4f {
         double attitude = Math.toRadians(pitch);
         double bank = Math.toRadians(azimuth);
 
-        double c1 = Math.cos(heading / 2);
-        double s1 = Math.sin(heading / 2);
-        double c2 = Math.cos(attitude / 2);
-        double s2 = Math.sin(attitude / 2);
-        double c3 = Math.cos(bank / 2);
-        double s3 = Math.sin(bank / 2);
+        double c1 = Math.cos(heading / 2d);
+        double c2 = Math.cos(attitude / 2d);
+        double c3 = Math.cos(bank / 2d);
+        double s1 = Math.sin(heading / 2d);
+        double s2 = Math.sin(attitude / 2d);
+        double s3 = Math.sin(bank / 2d);
         double c1c2 = c1 * c2;
         double s1s2 = s1 * s2;
         setW((float) (c1c2 * c3 - s1s2 * s3));

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.bearbunny.controllerdemo.ControllerDataProvider;
 import com.bearbunny.controllerdemo.R;
@@ -35,6 +36,8 @@ public class OrientationVisualisationFragment extends android.app.Fragment {
      */
     public static final String ARG_SECTION_NUMBER = "section_number";
 
+    private ControllerDataProvider dataProvider;
+
     private View view;
 
     @Override
@@ -59,6 +62,7 @@ public class OrientationVisualisationFragment extends android.app.Fragment {
 
     public void SetDataProvider(ControllerDataProvider dataProvider) {
         this.currentOrientationProvider = dataProvider.getOrientationProvider();
+        this.dataProvider = dataProvider;
     }
 
     @Override
@@ -97,6 +101,7 @@ public class OrientationVisualisationFragment extends android.app.Fragment {
         // Create our Preview view and set it as the content of our Activity
         mRenderer = new CubeRenderer();
         mRenderer.setOrientationProvider(currentOrientationProvider);
+        mRenderer.setDataProvider(dataProvider);
         mGLSurfaceView = new GLSurfaceView(getActivity());
         mGLSurfaceView = (GLSurfaceView) view.findViewById(R.id.orientetionSurfaceView);
         mGLSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
@@ -108,6 +113,14 @@ public class OrientationVisualisationFragment extends android.app.Fragment {
             public boolean onLongClick(View v) {
                 mRenderer.toggleShowCubeInsideOut();
                 return true;
+            }
+        });
+
+        final Button setCenterButton = (Button) view.findViewById(R.id.setCenterButton_visualisation);
+        setCenterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataProvider.setCurrentOrientationAsCenter();
             }
         });
 

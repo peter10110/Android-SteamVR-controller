@@ -29,57 +29,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="Target IP:"
+            android:id="@+id/textView"
+            android:textColor="#ffffff" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Target IP:"
-                android:id="@+id/textView"
-                android:textColor="#ffffff" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/targetIPField"
+            android:text="192.168.0.12"
+            android:background="#333333"
+            android:imeOptions="actionDone"
+            android:imeActionLabel="Done"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:textColor="#ffffff" />
+    </LinearLayout>
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/targetIPField"
-                android:text="192.168.0.12"
-                android:background="#333333"
-                android:imeOptions="actionDone"
-                android:imeActionLabel="Done"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:textColor="#ffffff" />
-        </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="Port: "
+            android:id="@+id/portText"
+            android:textColor="#ffffff" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Port: "
-                android:id="@+id/portText"
-                android:textColor="#ffffff" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/targetPortField"
+            android:textColor="#ffffff"
+            android:background="#333333"
+            android:imeOptions="actionDone"
+            android:imeActionLabel="Done"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:text="5555" />
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/targetPortField"
-                android:textColor="#ffffff"
-                android:background="#333333"
-                android:imeOptions="actionDone"
-                android:imeActionLabel="Done"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:text="5555" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -95,7 +89,7 @@
             android:textColor="#ffffff" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:id="@+id/intervalField"
@@ -186,8 +180,40 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fused qutaternion (WXYZ): "
+            android:layout_gravity="left"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:typeface="monospace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0;0;0;0"
+            android:id="@+id/fusedQuatValue"
+            android:layout_gravity="right"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set zero point"
+            android:id="@+id/zeroPointButton"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1.">
+        android:layout_weight="1">
 
         <Button
             android:layout_width="match_parent"

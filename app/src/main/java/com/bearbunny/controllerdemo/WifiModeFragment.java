@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -53,6 +54,8 @@ public class WifiModeFragment extends Fragment {
     private Button btn_button2;
     private ToggleButton volumeUp_btn;
     private ToggleButton volumeDwn_btn;
+    private TextView fusedQuaternionField;
+    private Button btn_zeroPoint;
 
     private enum ConnectionModes {
         UDP, TCP
@@ -157,12 +160,20 @@ public class WifiModeFragment extends Fragment {
         });
 
         fusedSensorField = (TextView) view.findViewById(R.id.fusedValue);
+        fusedQuaternionField = (TextView) view.findViewById(R.id.fusedQuatValue);
 
         btn_button0 = (Button) view.findViewById(R.id.button0);
         btn_button1 = (Button) view.findViewById(R.id.button1);
         btn_button2 = (Button) view.findViewById(R.id.button2);
         volumeUp_btn = (ToggleButton) view.findViewById(R.id.volUpTgBtn);
         volumeDwn_btn = (ToggleButton) view.findViewById(R.id.volDwnTgBtn);
+        btn_zeroPoint = (Button) view.findViewById(R.id.zeroPointButton);
+        btn_zeroPoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataProvider.setCurrentOrientationAsCenter();
+            }
+        });
 
         btn_button0.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -206,8 +217,13 @@ public class WifiModeFragment extends Fragment {
             }
         });
 
-        StartDataRefreshThread();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        StartDataRefreshThread();
     }
 
     public void SetDataProvider(ControllerDataProvider dataProvider, BackgroundProcessManager backgroundProcessManager) {
@@ -219,6 +235,7 @@ public class WifiModeFragment extends Fragment {
     private void RefreshFusedDataField() {
         fusedString = ControllerDataProvider.Float3ToString(dataProvider.getFusedEulerAngles());
         fusedSensorField.setText(fusedString);
+        fusedQuaternionField.setText(ControllerDataProvider.QuaternionToString(dataProvider.getFusedQuaternion()));
     }
 
     public String GetWifiIP() {
