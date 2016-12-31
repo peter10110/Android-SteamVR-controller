@@ -228,6 +228,7 @@ public class ControllerDataProvider {
         Quaternion angleCorrection = new Quaternion();
         angleCorrection.setAxisAngle(new Vector3f(1f,0f,0f),-90f);
         angleCorrection.multiplyByQuat(finalFusedQuaternion, finalFusedQuaternion);
+        finalFusedQuaternion.setW(-finalFusedQuaternion.w());
     }
 
     /**

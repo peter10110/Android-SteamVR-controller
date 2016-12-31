@@ -105,7 +105,7 @@ public class SendDataThroughWifi {
                 + fusedOrientation_TAG + ";"
                 + fusedData[1] + ";" + fusedData[0] + ";" + -fusedData[2] +";"
                 + fusedQuaternion_TAG + ";"
-                + (-fusedQuaternion.getW()) + ";" + (fusedQuaternion.getX()) + ";" + (fusedQuaternion.getY()) + ";" + (fusedQuaternion.getZ()) + ";"
+                + (fusedQuaternion.getW()) + ";" + (fusedQuaternion.getX()) + ";" + (fusedQuaternion.getY()) + ";" + (fusedQuaternion.getZ()) + ";"
                 + setCenter_TAG + ";" + (dataProvider.getAndClearResetCenterButton() ? 1 : 0) + ";"
                 + buttons_TAG + ";" + buttonState + ";"
                 + trackpad_TAG + ";"
