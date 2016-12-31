@@ -25,6 +25,7 @@ public class ControllerDataProvider {
     private Quaternion fusedQuaternion;
     private Quaternion zeroQuaternion;
     private Quaternion finalFusedQuaternion;
+    private String whichHand = "R";
 
     // Buttons
     public enum Buttons {
@@ -37,6 +38,7 @@ public class ControllerDataProvider {
     private boolean trackpadTouched = false;
     private float trackpadX = 0f;
     private float trackpadY = 0f;
+    private boolean resetCenter = false;
 
     // Debug options
     private boolean lockOrientation = false;
@@ -54,6 +56,10 @@ public class ControllerDataProvider {
         hmdCorrectionQuat.setXYZW(x,y,z,w);
     }
 
+    public String getWhichHand() {
+        return whichHand;
+    }
+
     public Boolean getOrientationLock() {
         return lockOrientation;
     }
@@ -64,6 +70,16 @@ public class ControllerDataProvider {
 
     public Quaternion getHmdCorrection() {
         return hmdCorrectionQuat;
+    }
+
+    public boolean getAndClearResetCenterButton() {
+        boolean temp = resetCenter;
+        resetCenter = false;
+        return temp;
+    }
+
+    public boolean getResetCenterButton() {
+        return resetCenter;
     }
 
     public void setButtonState(Buttons button, boolean state) {
@@ -101,6 +117,10 @@ public class ControllerDataProvider {
             default:
                 return false;
         }
+    }
+
+    public void setHand(String newValue) {
+        whichHand = newValue;
     }
 
     public float getTrackpadX() {
@@ -187,6 +207,7 @@ public class ControllerDataProvider {
         zeroQuaternion.invert();
         zeroQuaternion.setW(-zeroQuaternion.getW());
         Log.d("Center point inverted", zeroQuaternion.toStringSingleLine());
+        resetCenter = true;
     }
 
     float angleCounter = 0f;
@@ -196,7 +217,7 @@ public class ControllerDataProvider {
 
         if (dummyOrientation) {
             //fusedQuaternion.setXYZW(0f, 0f, 0.707f, 0.707f);
-            fusedQuaternion.setAxisAngle(new Vector3f(1f, 0f, 0f), angleCounter += 5f);
+            fusedQuaternion.setAxisAngle(new Vector3f(1f, 0f, 0f), 35f);
         }
         else {
             currentOrientationProvider.getQuaternion(fusedQuaternion);

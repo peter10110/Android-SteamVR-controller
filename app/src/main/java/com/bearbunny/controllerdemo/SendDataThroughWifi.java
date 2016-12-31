@@ -21,6 +21,7 @@ public class SendDataThroughWifi {
     private final String fusedOrientation_TAG = "FO";
     private final String fusedQuaternion_TAG = "FQ";
     private final String hmdCorrection_TAG = "HMDC";
+    private final String setCenter_TAG = "SCT";
     private final String buttons_TAG = "BTN";
     private final String trackpad_TAG = "TRK";
     private final String close_TAG = "END";
@@ -57,7 +58,7 @@ public class SendDataThroughWifi {
     public void SendData() {
         try {
             packet_message = GetPacketMessage();
-            //System.out.println("Packet message: " + packet_message);
+            System.out.println("Packet message: " + packet_message);
             if (packet == null) {
                 byte[] bytes = packet_message.getBytes();
                 packet = new DatagramPacket(bytes, bytes.length, target, targetPort);
@@ -98,14 +99,14 @@ public class SendDataThroughWifi {
 
         float[] fusedData = dataProvider.getFusedEulerAngles();
         Quaternion fusedQuaternion = dataProvider.getFusedQuaternion();
-        Quaternion hmdQuaternion = dataProvider.getHmdCorrection();
-        return timestamp_TAG + ";" + packet_timestamp + ";"
+
+        return dataProvider.getWhichHand() + "#"
+                + timestamp_TAG + ";" + packet_timestamp + ";"
                 + fusedOrientation_TAG + ";"
                 + fusedData[1] + ";" + fusedData[0] + ";" + -fusedData[2] +";"
                 + fusedQuaternion_TAG + ";"
                 + (-fusedQuaternion.getW()) + ";" + (fusedQuaternion.getX()) + ";" + (fusedQuaternion.getY()) + ";" + (fusedQuaternion.getZ()) + ";"
-                + hmdCorrection_TAG + ";"
-                + hmdQuaternion.getW() + ";" + hmdQuaternion.getX() + ";" + hmdQuaternion.getY() + ";" + hmdQuaternion.getZ() + ";"
+                + setCenter_TAG + ";" + (dataProvider.getAndClearResetCenterButton() ? 1 : 0) + ";"
                 + buttons_TAG + ";" + buttonState + ";"
                 + trackpad_TAG + ";"
                 + (dataProvider.getTracpadTouched() ? 1 : 0) + ";" + dataProvider.getTrackpadX() + ";" + dataProvider.getTrackpadY() + ";"

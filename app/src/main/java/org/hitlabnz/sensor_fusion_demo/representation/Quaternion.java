@@ -147,7 +147,6 @@ public class Quaternion extends Vector4f {
     // return a new Quaternion whose value is the inverse of this
     public void invert() {
         float d = w()*w() + x()*x() + y()*y() + z()*z();
-        Log.d("Invert d", "d="+d);
         setX(-x() / d);
         setY(-y() / d);
         setZ(-z() / d);

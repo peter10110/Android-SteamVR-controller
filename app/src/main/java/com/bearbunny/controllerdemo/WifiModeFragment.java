@@ -56,6 +56,8 @@ public class WifiModeFragment extends Fragment {
     private ToggleButton volumeDwn_btn;
     private TextView fusedQuaternionField;
     private Button btn_zeroPoint;
+    private Button btn_rightHand;
+    private Button btn_leftHand;
 
     private enum ConnectionModes {
         UDP, TCP
@@ -214,6 +216,22 @@ public class WifiModeFragment extends Fragment {
                     dataProvider.setButtonState(ControllerDataProvider.Buttons.Grip, true);
                 }
                 return false;
+            }
+        });
+
+        btn_leftHand = (Button) view.findViewById(R.id.setHandToLeftBtn);
+        btn_leftHand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataProvider.setHand("L");
+            }
+        });
+
+        btn_rightHand = (Button) view.findViewById(R.id.setHandToRightBtn);
+        btn_rightHand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataProvider.setHand("R");
             }
         });
 

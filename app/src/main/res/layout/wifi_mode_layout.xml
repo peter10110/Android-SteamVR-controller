@@ -133,6 +133,7 @@
                 android:layout_gravity="center_vertical|left" />
 
             <RadioButton
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TCP"
@@ -207,6 +208,24 @@
             android:layout_height="wrap_content"
             android:text="Set zero point"
             android:id="@+id/zeroPointButton"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Left hand"
+            android:id="@+id/setHandToLeftBtn"
+            android:layout_weight="1"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Right hand"
+            android:layout_weight="1"
+            android:id="@+id/setHandToRightBtn"/>
     </LinearLayout>
 
     <LinearLayout
