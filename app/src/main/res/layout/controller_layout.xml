@@ -42,7 +42,7 @@
             android:layout_height="10dp" />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center">
             <Space
@@ -51,8 +51,8 @@
                 android:layout_weight="1"/>
             <TextView
                 android:id="@+id/menu_btn"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="90dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/circle"
                 android:text="Menu"
                 android:gravity="center"
@@ -67,8 +67,8 @@
                 android:layout_weight="1"/>
             <TextView
                 android:id="@+id/system_btn"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="90dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/circle"
                 android:text="System"
                 android:gravity="center"
@@ -80,8 +80,8 @@
                 android:layout_weight="1"/>
             <TextView
                 android:id="@+id/grip_btn"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="90dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/circle"
                 android:text="Grip"
                 android:gravity="center"
