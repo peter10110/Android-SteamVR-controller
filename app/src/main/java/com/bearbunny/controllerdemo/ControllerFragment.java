@@ -1,12 +1,14 @@
 package com.bearbunny.controllerdemo;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,6 +18,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,6 +32,9 @@ public class ControllerFragment extends Fragment {
     private ControllerDataProvider dataProvider;
     private BackgroundProcessManager processManager;
 
+    private PowerManager.WakeLock mWakeLock;
+
+    private Button resetButton;
     private TextView menuButton;
     private TextView systemButton;
     private TextView gripButton;
@@ -138,9 +145,19 @@ public class ControllerFragment extends Fragment {
             }
         });
 
+        resetButton = (Button) view.findViewById(R.id.controllerResetButton);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataProvider.setCurrentOrientationAsCenter();
+            }
+        });
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         density = displayMetrics.density;
+
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         return view;
     }
