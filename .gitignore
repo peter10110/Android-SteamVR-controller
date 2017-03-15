@@ -1,8 +1,8 @@
+!/app/*
+!app/*
+!app/build/outputs/*
 *.iml
 .gradle
-/build/*
-!/build/output
-!/build/output/*
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
