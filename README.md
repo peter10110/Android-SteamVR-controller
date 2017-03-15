@@ -13,7 +13,7 @@ I've tested and made the application on a Nexus 5, with Android 7.1.1.
 This app is REALLY just a demo. It can function as a controller, but it's ugly and not very comfortable.
 
 # How to get it?
-Compile it from source, or just install the APK in the "Compiled" folder.
+Compile it from source, or just install the APK (debug version) in the "Compiled" folder.
 
 # How to use?
  The application is quite straightforward. You can access a side menu, by swiping your finger from the left side, where you can navigate between the tabs.
